@@ -21,7 +21,6 @@
 */.expo-shared
 */.expo-settings.json
 */.expo-shared
-*/
 HELP.md
 target/
 !.mvn/wrapper/maven-wrapper.jar
