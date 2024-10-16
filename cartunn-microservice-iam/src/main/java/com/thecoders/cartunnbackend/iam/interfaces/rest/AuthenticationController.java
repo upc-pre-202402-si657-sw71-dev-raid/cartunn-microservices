@@ -1,10 +1,13 @@
 package com.thecoders.cartunnbackend.iam.interfaces.rest;
 
 import com.thecoders.cartunnbackend.iam.domain.services.UserCommandService;
+import com.thecoders.cartunnbackend.iam.domain.services.ValidateTokenCommandService;
 import com.thecoders.cartunnbackend.iam.interfaces.rest.resources.AuthenticatedUserResource;
 import com.thecoders.cartunnbackend.iam.interfaces.rest.resources.SignInResource;
 import com.thecoders.cartunnbackend.iam.interfaces.rest.resources.SignUpResource;
+import com.thecoders.cartunnbackend.iam.interfaces.rest.resources.TokenResource;
 import com.thecoders.cartunnbackend.iam.interfaces.rest.resources.UserResource;
+import com.thecoders.cartunnbackend.iam.interfaces.rest.resources.ValidateTokenResponse;
 import com.thecoders.cartunnbackend.iam.interfaces.rest.transform.AuthenticatedUserResourceFromEntityAssembler;
 import com.thecoders.cartunnbackend.iam.interfaces.rest.transform.SignInCommandFromResourceAssembler;
 import com.thecoders.cartunnbackend.iam.interfaces.rest.transform.SignUpCommandFromResourceAssembler;
@@ -23,9 +26,11 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Authentication", description = "Authentication Endpoints")
 public class AuthenticationController {
     private final UserCommandService userCommandService;
+    private final ValidateTokenCommandService validateTokenCommandService;
 
-    public AuthenticationController(UserCommandService userCommandService) {
+    public AuthenticationController(UserCommandService userCommandService, ValidateTokenCommandService validateTokenCommandService) {
         this.userCommandService = userCommandService;
+        this.validateTokenCommandService = validateTokenCommandService;
     }
 
     @PostMapping("/sign-up")
@@ -44,5 +49,13 @@ public class AuthenticationController {
         if (authenticatedUser.isEmpty()) return ResponseEntity.notFound().build();
         var authenticatedUserResource = AuthenticatedUserResourceFromEntityAssembler.toResourceFromEntity(authenticatedUser.get().getLeft(), authenticatedUser.get().getRight());
         return ResponseEntity.ok(authenticatedUserResource);
+    }
+
+    @PostMapping("/validate-token")
+    public ResponseEntity<ValidateTokenResponse> validateToken(@RequestBody TokenResource token) {
+        var authenticatedUser = validateTokenCommandService.handle(token.token());
+        if (authenticatedUser.isEmpty())
+            return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(new ValidateTokenResponse(authenticatedUser.get()));
     }
 }
