@@ -1,7 +1,6 @@
 package com.thecoders.cartunnbackend.purchasing.domain.model.aggregates;
 
 import com.thecoders.cartunnbackend.purchasing.domain.model.commands.CreateOrderCommand;
-import com.thecoders.cartunnbackend.shared.domain.model.aggregates.AuditableAbstractAggregateRoot;
 import jakarta.persistence.*;
 import lombok.Getter;
 import org.apache.logging.log4j.util.Strings;
