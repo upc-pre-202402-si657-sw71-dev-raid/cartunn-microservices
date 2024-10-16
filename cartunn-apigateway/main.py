@@ -4,13 +4,13 @@ from pydantic import BaseModel
 app = FastAPI()
 
 # Microservicios URLs
+MICROSERVICE_IAM_URL = "http://localhost:8080/api/v1/authentication"
 MICROSERVICE_TUNNING_URL = "http://localhost:8080/api/v1/tunning-task"
 MICROSERVICE_PURCHASING_URL = "http://localhost:8080/api/v1/orders"
 
 @app.get("/service-tunning/")
 async def route_to_service_tunning(request: Request):
     url = f"{MICROSERVICE_TUNNING_URL}"
-    # Enviar la solicitud al microservicio A
     response = requests.get(url, headers=request.headers)
     return response.json()
 
@@ -22,7 +22,6 @@ class TunningTask(BaseModel):
 @app.post("/service-tunning/")
 async def route_to_service_tunning(request: Request, tunning_task: TunningTask):
     url = f"{MICROSERVICE_TUNNING_URL}"
-    # Enviar la solicitud al microservicio A
     response = requests.post(url, headers=request.headers, json=tunning_task.dict())
     return response.json()
 
