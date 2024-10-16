@@ -2,7 +2,7 @@ from fastapi import FastAPI, HTTPException, Request
 import requests
 from configs.url_publics import PUBLIC_URLS
 from configs.url_services import MICROSERVICE_IAM_URL
-from services.Orders.orders_service import orders_router
+from services.Purchasing.Orders.orders_service import orders_router
 from services.Tunning.tunnning_service import tunning_router
 
 app = FastAPI(
@@ -27,8 +27,6 @@ async def is_token_valid(token: str) -> bool:
         if response.json().get("valid") == True:
             return True
     return False
-
-
 
 @app.middleware("http")
 async def check_token(request: Request, call_next):
@@ -63,5 +61,5 @@ async def check_token(request: Request, call_next):
     return response
 
 
-app.include_router(orders_router, tags=["Orders Microservice"])
+app.include_router(orders_router, tags=["Purchasing Microservice"])
 app.include_router(tunning_router, tags=["Tunning Microservice"])
